@@ -183,7 +183,7 @@ public class Teleop2023 extends LinearOpMode{
              } else if (gripPosition > MIN_POSITION) {
                  gripPosition=gripPosition-0.7;
                  telemetry.addData("bumperRight", "hi");
-
+//
              }
              telemetry.addData("gripPosition", gripPosition);
              telemetry.update();
