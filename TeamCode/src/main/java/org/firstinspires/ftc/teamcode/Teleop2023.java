@@ -50,7 +50,7 @@ public class Teleop2023 extends LinearOpMode{
     public  int timer = 0;
     boolean apressed = false;
     boolean bpressed = false;
-    double mainPower = 0.45; // maintain ratio, change this to change speed of robot
+    double mainPower = 0.7; // maintain ratio, change this to change speed of robot
     boolean fastMode = true;
 
     public void runOpMode() throws InterruptedException {
@@ -137,17 +137,26 @@ public class Teleop2023 extends LinearOpMode{
 
             }
 
-            telemetry.addData("POSITION", intakeServoR.getPosition());
-            telemetry.update();
 
-            if (gamepad2.dpad_up) {
 
-                intakeServoR.setPosition(50);
-                intakeServoL.setPosition(50);
+            if (gamepad2.dpad_left) {
+                telemetry.addData("POSITION", intakeServoL.getPosition());
+                telemetry.update();
+                if(intakeServoL.getPosition() > 250) {
+                    intakeServoL.setDirection(Servo.Direction.REVERSE);
+                } else {
+                    intakeServoL.setDirection(Servo.Direction.FORWARD);
+                }
+                intakeServoL.setPosition(5);
+
             }
             if (gamepad2.dpad_down) {
-                intakeServoR.setPosition(0);
-                intakeServoL.setPosition(0);
+                intakeServoL.setDirection(Servo.Direction.REVERSE);
+                intakeServoL.setPosition(50);
+
+            } if (gamepad2.dpad_up) {
+                intakeServoL.setDirection(Servo.Direction.FORWARD);
+                intakeServoL.setPosition(300);
             }
 
 
@@ -166,19 +175,24 @@ public class Teleop2023 extends LinearOpMode{
 //                arm.setPower(0.25);
 //            }
 
-         if (gamepad1.right_bumper  && gripPosition < MAX_POSITION) {
-           gripPosition=gripPosition+0.01;
-           telemetry.addData("bumperLeft", "hello");
-            }
-            if (gamepad1.left_bumper  && gripPosition > MIN_POSITION) {
-              gripPosition=gripPosition-0.01;
-              telemetry.addData("bumperRight", "hi");
+         if (gamepad1.left_bumper) {
 
+             if (gripPosition < MAX_POSITION) {
+                 gripPosition=gripPosition+0.7;
+                 telemetry.addData("bumperLeft", "hello");
+             } else if (gripPosition > MIN_POSITION) {
+                 gripPosition=gripPosition-0.7;
+                 telemetry.addData("bumperRight", "hi");
+
+             }
+             telemetry.addData("gripPosition", gripPosition);
+             telemetry.update();
+             SERVOposition = Range.clip(gripPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
+             telemetry.addData("targetPosition", SERVOposition);
+             telemetry.update();
+             launcher.setPosition(SERVOposition);
             }
-            telemetry.addData("gripPosition", gripPosition);
-            telemetry.update();
-            SERVOposition = Range.clip(gripPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
-            launcher.setPosition(SERVOposition);
+
 
 
 
@@ -187,15 +201,15 @@ public class Teleop2023 extends LinearOpMode{
             // This ensures all the powers maintain the same ratio, but only when
             // at least one is out of the range [-1, 1]
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double frontLeftPower = (y - x - rx) / denominator;
-            double backLeftPower = (y + x - rx) / denominator;
-            double frontRightPower = (y - x + rx) / denominator;
-            double backRightPower = (y + x + rx) / denominator;
+            double frontLeftPower = (y - x*1.1 + rx) / denominator;
+            double backLeftPower = (y + x*1.1 + rx) / denominator;
+            double frontRightPower = (y + x*1.1 - rx) / denominator;
+            double backRightPower = (y - x*1.1 - rx) / denominator;
             //Slower speed so that is easier to control
             motorFrontLeft.setPower(frontLeftPower * mainPower);
-            motorBackLeft.setPower(backLeftPower * mainPower);
+            motorBackLeft.setPower(backLeftPower * mainPower );
             motorFrontRight.setPower(frontRightPower * mainPower);
-            motorBackRight.setPower(backRightPower * mainPower * 1.27);
+            motorBackRight.setPower(backRightPower * mainPower);
 
 
 
