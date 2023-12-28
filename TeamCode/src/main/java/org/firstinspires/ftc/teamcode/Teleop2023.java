@@ -20,9 +20,8 @@ public class Teleop2023 extends LinearOpMode{
     Servo launcher;
     DcMotor armRight;
     DcMotor armLeft;
-    DcMotor intakeMotor;
-    Servo intakeServoL;
-    Servo intakeServoR;
+  //  DcMotor intakeMotor;
+    Servo intakeServo;
 
     double armPosition, gripPosition;
     double MIN_POSITION = 0, MAX_POSITION = 0.5;
@@ -50,7 +49,7 @@ public class Teleop2023 extends LinearOpMode{
     public  int timer = 0;
     boolean apressed = false;
     boolean bpressed = false;
-    double mainPower = 0.7; // maintain ratio, change this to change speed of robot
+    double mainPower = 0.5; // maintain ratio, change this to change speed of robot
     boolean fastMode = true;
 
     public void runOpMode() throws InterruptedException {
@@ -62,19 +61,17 @@ public class Teleop2023 extends LinearOpMode{
         launcher = hardwareMap.servo.get("launcher");
         armRight = hardwareMap.dcMotor.get("armRight"); //Calling the arm
         armLeft = hardwareMap.dcMotor.get("armLeft");
-        intakeMotor = hardwareMap.dcMotor.get("intakeMotor");
-        intakeServoL = hardwareMap.servo.get("intakeServoL");
-        intakeServoR = hardwareMap.servo.get("intakeServoR");
+        intakeServo = hardwareMap.servo.get("intakeServo");
 
 
         //Reverse front motors and back right motors
-   //    motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-     //   motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+       motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
          motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 //        motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
         armRight.setDirection(DcMotorSimple.Direction.FORWARD);
         armLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+    //    intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         telemetry.addData("TeleOp>", "Press Start");
         telemetry.update();
@@ -114,14 +111,14 @@ public class Teleop2023 extends LinearOpMode{
             }
 
             if(gamepad2.right_trigger>0){
-                intakeMotor.setPower(3);
+              //  intakeMotor.setPower(3);
             }
             if(gamepad2.left_trigger>0){
-                intakeMotor.setPower(-3);
+              //  intakeMotor.setPower(-3);
             }
 
             if(gamepad2.left_trigger == 0 && gamepad2.right_trigger == 0) {
-                intakeMotor.setPower(0);
+             //   intakeMotor.setPower(0);
             }
 
             if(gamepad1.right_bumper && fastMode){
@@ -139,24 +136,35 @@ public class Teleop2023 extends LinearOpMode{
 
 
 
-            if (gamepad2.dpad_left) {
-                telemetry.addData("POSITION", intakeServoL.getPosition());
+//            if (gamepad2.dpad_left) {
+//                telemetry.addData("POSITION", intakeServoL.getPosition());
+//                telemetry.update();
+//                if(intakeServo.getPosition() > 250) {
+//                    intakeServo.setDirection(Servo.Direction.REVERSE);
+//                } else {
+//                    intakeServo.setDirection(Servo.Direction.FORWARD);
+//                }
+//                intakeServo.setPosition(5);
+//
+//            }
+            if (gamepad2.left_trigger > 0) {
+
+                telemetry.addData("POSITION", intakeServo.getPosition());
+                telemetry.addData("adirection", intakeServo.getDirection());
                 telemetry.update();
-                if(intakeServoL.getPosition() > 250) {
-                    intakeServoL.setDirection(Servo.Direction.REVERSE);
-                } else {
-                    intakeServoL.setDirection(Servo.Direction.FORWARD);
-                }
-                intakeServoL.setPosition(5);
+                intakeServo.setDirection(Servo.Direction.REVERSE);
+                intakeServo.setPosition(1.0);
 
-            }
-            if (gamepad2.dpad_down) {
-                intakeServoL.setDirection(Servo.Direction.REVERSE);
-                intakeServoL.setPosition(50);
-
-            } if (gamepad2.dpad_up) {
-                intakeServoL.setDirection(Servo.Direction.FORWARD);
-                intakeServoL.setPosition(300);
+            } if (gamepad2.right_trigger > 0) {
+                telemetry.addData("POSITION", intakeServo.getPosition());
+                telemetry.update();
+                intakeServo.setDirection(Servo.Direction.FORWARD);
+                intakeServo.setPosition(1.0);
+            } if (gamepad2.right_trigger == 0 && gamepad2.left_trigger == 0) {
+                telemetry.addData("POSITION", intakeServo.getPosition());
+                telemetry.update();
+                intakeServo.setDirection(Servo.Direction.FORWARD);
+                intakeServo.setPosition(0.5);
             }
 
 

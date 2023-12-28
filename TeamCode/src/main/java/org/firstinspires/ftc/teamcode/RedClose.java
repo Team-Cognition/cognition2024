@@ -1,0 +1,132 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+@Autonomous(name="Red Close", group="Autonomous")
+public class RedClose extends LinearOpMode {
+
+    HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
+    private ElapsedTime runtime = new ElapsedTime();
+
+    double gripPosition = 0.5;
+    static final double TURN_SPEED = 0.35;
+    static final double armSpeed = 1;
+    public final static double CLAW_HOME = 0.0; //Starting position
+    public final static double CLAW_MIN_RANGE = 0.0; //Minimum value allowed
+    public final static double CLAW_MAX_RANGE = 0.4; //Maximum Range: It might break past this point
+    double SERVOposition = CLAW_HOME;
+    public int x = 2;
+
+    @Override
+    public void runOpMode() {
+        robot.init(hardwareMap);
+        telemetry.addData("Status", "Ready to run");    //
+        telemetry.update();
+
+
+        waitForStart();
+
+        if (x==1) {
+            MoveForward(1200);
+            sleep(100);
+        }
+        else if (x==2){
+            StrafeRight(725);
+            MoveForward(1000);
+            sleep(100);
+            sleep(100);
+        }
+        else if (x==3){
+            MoveForward(1000);
+            TurnLeft(500);
+            MoveForward(150);
+            sleep(100);
+        }
+
+
+
+    }
+        public void MoveForward ( long timeoutA){
+            if (opModeIsActive()) {
+
+                robot.setMotorPowers(-TURN_SPEED, TURN_SPEED, 1.1 * -TURN_SPEED, TURN_SPEED, 0);
+                runtime.reset();
+                sleep(timeoutA);
+                robot.setMotorPowers(0);
+            }
+        }
+
+
+        public void StrafeLeft ( long timeoutC){
+
+            if (opModeIsActive()) {
+
+                robot.setMotorPowers(TURN_SPEED, TURN_SPEED, 1.15 * -TURN_SPEED, -TURN_SPEED, 0); //changed ratio just for this because for some reason it was going crazy
+                runtime.reset();
+                sleep(timeoutC);
+                robot.setMotorPowers(0);
+
+            }
+
+        }
+
+
+        public void MoveBackward ( long timeoutB){
+
+            if (opModeIsActive()) {
+
+                robot.setMotorPowers(TURN_SPEED, -TURN_SPEED, 1.2 * TURN_SPEED, -TURN_SPEED, 0);
+                runtime.reset();
+                sleep(timeoutB);
+                robot.setMotorPowers(0);
+
+
+            }
+
+
+        }
+
+        public void StrafeRight ( long timeoutD){
+
+            if (opModeIsActive()) {
+
+                robot.setMotorPowers(-TURN_SPEED, -TURN_SPEED, -1.15 * -TURN_SPEED, TURN_SPEED, 0);
+                runtime.reset();
+                sleep(timeoutD);
+                robot.setMotorPowers(0);
+            }
+        }
+        public void TurnRight ( long timeoutE){
+
+            if (opModeIsActive()) {
+
+                robot.setMotorPowers(-TURN_SPEED, -TURN_SPEED, -TURN_SPEED, -TURN_SPEED, 0);
+                runtime.reset();
+                sleep(timeoutE);
+                robot.setMotorPowers(0);
+            }
+        }
+
+        public void TurnLeft ( long timeoutF){
+
+            if (opModeIsActive()) {
+
+                robot.setMotorPowers(TURN_SPEED, TURN_SPEED, TURN_SPEED, TURN_SPEED, 0);
+                runtime.reset();
+                sleep(timeoutF);
+                robot.setMotorPowers(0);
+            }
+        }
+
+    }
+
+
+
+

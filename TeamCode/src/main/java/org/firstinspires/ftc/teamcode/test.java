@@ -53,6 +53,7 @@ public class test extends LinearOpMode{
     double mainPower = 0.45; // maintain ratio, change this to change speed of robot
     boolean fastMode = true;
 
+
     public void runOpMode() throws InterruptedException {
 
         motorFrontLeft = hardwareMap.dcMotor.get("upperLeft"); //motorFrontLeft
@@ -62,11 +63,11 @@ public class test extends LinearOpMode{
         launcher = hardwareMap.servo.get("launcher");
         armRight = hardwareMap.dcMotor.get("armRight"); //Calling the arm
         armLeft = hardwareMap.dcMotor.get("armLeft");
-        intakeMotor = hardwareMap.dcMotor.get("intakeMotor");
-        intakeServoL = hardwareMap.servo.get("intakeServoL");
-        intakeServoR = hardwareMap.servo.get("intakeServoR");
-        intakeServoR.setPosition(100);
-        intakeServoL.setPosition(100);
+      //  intakeMotor = hardwareMap.dcMotor.get("intakeMotor");
+      //  intakeServoL = hardwareMap.servo.get("intakeServoL");
+      //  intakeServoR = hardwareMap.servo.get("intakeServoR");
+      //  intakeServoR.setPosition(100);
+      //  intakeServoL.setPosition(100);
 
         //Reverse front motors and back right motors
         //    motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -75,11 +76,14 @@ public class test extends LinearOpMode{
 //        motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
         armRight.setDirection(DcMotorSimple.Direction.FORWARD);
         armLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        intakeServoL.setDirection(Servo.Direction.REVERSE);
+    //    intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+       // intakeServoL.setDirection(Servo.Direction.REVERSE);
 
         telemetry.addData("TeleOp>", "Press Start");
         telemetry.update();
+
+
+
         waitForStart();
         runtime.reset();    // Start game timer.
 
@@ -115,16 +119,16 @@ public class test extends LinearOpMode{
                 armLeft.setPower(0);
             }
 
-            if(gamepad2.right_trigger>0){
-                intakeMotor.setPower(5);
-            }
-            if(gamepad2.left_trigger>0){
-                intakeMotor.setPower(-5);
-            }
-
-            if(gamepad2.left_trigger == 0 && gamepad2.right_trigger == 0) {
-                intakeMotor.setPower(0);
-            }
+//            if(gamepad2.right_trigger>0){
+//                intakeMotor.setPower(5);
+//            }
+//            if(gamepad2.left_trigger>0){
+//                intakeMotor.setPower(-5);
+//            }
+//
+//            if(gamepad2.left_trigger == 0 && gamepad2.right_trigger == 0) {
+//                intakeMotor.setPower(0);
+//            }
 
             if(gamepad1.right_bumper && fastMode){
 
@@ -139,16 +143,16 @@ public class test extends LinearOpMode{
 
             }
 
-            if (gamepad2.dpad_up) {
-                telemetry.addData("TeleOp>", "dlumbass nigg");
-                telemetry.update();
-                intakeServoR.setPosition(300);
-                intakeServoL.setPosition(300);
-            }
-            if (gamepad2.dpad_down) {
-                intakeServoR.setPosition(0);
-                intakeServoL.setPosition(0);
-            }
+//            if (gamepad2.dpad_up) {
+//                telemetry.addData("TeleOp>", "dlumbass nigg");
+//                telemetry.update();
+//                intakeServoR.setPosition(300);
+//                intakeServoL.setPosition(300);
+//            }
+//            if (gamepad2.dpad_down) {
+//                intakeServoR.setPosition(0);
+//                intakeServoL.setPosition(0);
+//            }
 
 
 
