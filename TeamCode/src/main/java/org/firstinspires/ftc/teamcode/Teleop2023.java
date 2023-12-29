@@ -20,8 +20,11 @@ public class Teleop2023 extends LinearOpMode{
     Servo launcher;
     DcMotor armRight;
     DcMotor armLeft;
-  //  DcMotor intakeMotor;
     Servo intakeServo;
+    Servo seatBeltL;
+    Servo seatBeltR;
+    Servo Elbow;
+    Servo Wrist;
 
     double armPosition, gripPosition;
     double MIN_POSITION = 0, MAX_POSITION = 0.5;
@@ -62,16 +65,19 @@ public class Teleop2023 extends LinearOpMode{
         armRight = hardwareMap.dcMotor.get("armRight"); //Calling the arm
         armLeft = hardwareMap.dcMotor.get("armLeft");
         intakeServo = hardwareMap.servo.get("intakeServo");
+//        seatBeltL = hardwareMap.servo.get("seatBeltL");
+//        seatBeltR = hardwareMap.servo.get("seatBeltR");
+        Elbow = hardwareMap.servo.get("Elbow");
+//        Wrist = hardwareMap.servo.get("Wrist");
 
 
-        //Reverse front motors and back right motors
-       motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        //Reverse front motors and back left motors
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-         motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-//        motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+//      motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
         armRight.setDirection(DcMotorSimple.Direction.FORWARD);
         armLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-    //    intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         telemetry.addData("TeleOp>", "Press Start");
         telemetry.update();
@@ -110,16 +116,8 @@ public class Teleop2023 extends LinearOpMode{
                 armLeft.setPower(0);
             }
 
-            if(gamepad2.right_trigger>0){
-              //  intakeMotor.setPower(3);
-            }
-            if(gamepad2.left_trigger>0){
-              //  intakeMotor.setPower(-3);
-            }
 
-            if(gamepad2.left_trigger == 0 && gamepad2.right_trigger == 0) {
-             //   intakeMotor.setPower(0);
-            }
+
 
             if(gamepad1.right_bumper && fastMode){
 
@@ -136,17 +134,6 @@ public class Teleop2023 extends LinearOpMode{
 
 
 
-//            if (gamepad2.dpad_left) {
-//                telemetry.addData("POSITION", intakeServoL.getPosition());
-//                telemetry.update();
-//                if(intakeServo.getPosition() > 250) {
-//                    intakeServo.setDirection(Servo.Direction.REVERSE);
-//                } else {
-//                    intakeServo.setDirection(Servo.Direction.FORWARD);
-//                }
-//                intakeServo.setPosition(5);
-//
-//            }
             if (gamepad2.left_trigger > 0) {
 
                 telemetry.addData("POSITION", intakeServo.getPosition());
@@ -191,7 +178,7 @@ public class Teleop2023 extends LinearOpMode{
              } else if (gripPosition > MIN_POSITION) {
                  gripPosition=gripPosition-0.7;
                  telemetry.addData("bumperRight", "hi");
-//
+
              }
              telemetry.addData("gripPosition", gripPosition);
              telemetry.update();
@@ -199,6 +186,24 @@ public class Teleop2023 extends LinearOpMode{
              telemetry.addData("targetPosition", SERVOposition);
              telemetry.update();
              launcher.setPosition(SERVOposition);
+            }
+
+            if(gamepad2.dpad_down) {
+                Elbow.setDirection(Servo.Direction.FORWARD);
+
+                if(Elbow.getPosition() > 0.5) {
+
+//                    Elbow.setDirection(Servo.Direction.FORWARD);
+                    Elbow.setPosition(0.0);
+                } else {
+                    Elbow.setPosition(1.0);
+                }
+                telemetry.addData("targetPosition", Elbow.getPosition());
+                telemetry.addData("direction", Elbow.getDirection());
+                telemetry.update();
+                sleep(1500);
+
+
             }
 
 
