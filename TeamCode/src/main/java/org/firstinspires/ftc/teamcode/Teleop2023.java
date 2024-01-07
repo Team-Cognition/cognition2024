@@ -65,8 +65,8 @@ public class Teleop2023 extends LinearOpMode{
         armRight = hardwareMap.dcMotor.get("armRight"); //Calling the arm
         armLeft = hardwareMap.dcMotor.get("armLeft");
         intakeServo = hardwareMap.servo.get("intakeServo");
-//        seatBeltL = hardwareMap.servo.get("seatBeltL");
-//        seatBeltR = hardwareMap.servo.get("seatBeltR");
+        seatBeltL = hardwareMap.servo.get("seatBeltL");
+        seatBeltR = hardwareMap.servo.get("seatBeltR");
         Elbow = hardwareMap.servo.get("Elbow");
 //        Wrist = hardwareMap.servo.get("Wrist");
 
@@ -190,7 +190,7 @@ public class Teleop2023 extends LinearOpMode{
 
             if(gamepad2.dpad_down) {
                 Elbow.setDirection(Servo.Direction.FORWARD);
-
+//                Elbow.setPosition(1.0);
                 if(Elbow.getPosition() > 0.5) {
 
 //                    Elbow.setDirection(Servo.Direction.FORWARD);
@@ -198,11 +198,35 @@ public class Teleop2023 extends LinearOpMode{
                 } else {
                     Elbow.setPosition(1.0);
                 }
+
+
                 telemetry.addData("targetPosition", Elbow.getPosition());
                 telemetry.addData("direction", Elbow.getDirection());
                 telemetry.update();
                 sleep(1500);
 
+
+            }
+            if (gamepad2.b){
+
+                if(seatBeltL.getPosition() > 0.6) {
+                    seatBeltL.setDirection(Servo.Direction.REVERSE);
+                    seatBeltL.setPosition(0.5);
+                } else {
+                    seatBeltL.setDirection(Servo.Direction.FORWARD);
+                    seatBeltL.setPosition(0.8);
+                }
+
+            }
+            if (gamepad2.y){
+
+                if(seatBeltR.getPosition() > 0.6) {
+                    seatBeltR.setDirection(Servo.Direction.REVERSE);
+                    seatBeltR.setPosition(0.5);
+                } else {
+                    seatBeltR.setDirection(Servo.Direction.FORWARD);
+                    seatBeltR.setPosition(0.8);
+                }
 
             }
 
