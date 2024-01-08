@@ -68,7 +68,7 @@ public class Teleop2023 extends LinearOpMode{
         seatBeltL = hardwareMap.servo.get("seatBeltL");
         seatBeltR = hardwareMap.servo.get("seatBeltR");
         Elbow = hardwareMap.servo.get("Elbow");
-//        Wrist = hardwareMap.servo.get("Wrist");
+        Wrist = hardwareMap.servo.get("Wrist");
 
 
         //Reverse front motors and back left motors
@@ -111,7 +111,8 @@ public class Teleop2023 extends LinearOpMode{
             } else if (gamepad2.left_stick_y<0) {
                 armRight.setPower(armpower2*gamepad2.left_stick_y);
                 armLeft.setPower(armpower2*gamepad2.left_stick_y);
-            } else if ((!(gamepad2.dpad_down || gamepad2.dpad_up)) && !(gamepad2.a || gamepad2.b || gamepad2.x)) {
+            }
+            else if ((!(gamepad2.dpad_down || gamepad2.dpad_up)) && !(gamepad2.a || gamepad2.b || gamepad2.x)) {
                 armRight.setPower(0);
                 armLeft.setPower(0);
             }
@@ -189,31 +190,40 @@ public class Teleop2023 extends LinearOpMode{
             }
 
             if(gamepad2.dpad_down) {
-                Elbow.setDirection(Servo.Direction.FORWARD);
-//                Elbow.setPosition(1.0);
-                if(Elbow.getPosition() > 0.5) {
 
-//                    Elbow.setDirection(Servo.Direction.FORWARD);
-                    Elbow.setPosition(0.0);
-                } else {
-                    Elbow.setPosition(1.0);
+                Elbow.setPosition(0.6);
+
+                //                Elbow.setDirection(Servo.Direction.FORWARD);
+//                if(Elbow.getPosition() > 0.5) {
+//                    Elbow.setPosition(0.0);
+//                } else {
+//                    Elbow.setPosition(1.0);
                 }
+            if(gamepad2.dpad_up) {
+                Elbow.setDirection(Servo.Direction.REVERSE);
+                Elbow.setPosition(1.0);
 
 
-                telemetry.addData("targetPosition", Elbow.getPosition());
-                telemetry.addData("direction", Elbow.getDirection());
-                telemetry.update();
-                sleep(1500);
-
-
+//                telemetry.addData("targetPosition", Elbow.getPosition());
+//                telemetry.addData("direction", Elbow.getDirection());
+//                telemetry.update();
+//                sleep(1500);
             }
+
+            if (gamepad2.dpad_right){
+                Elbow.setDirection(Servo.Direction.REVERSE);
+                Elbow.setPosition(0.5);
+            }
+
+            if (gamepad2.dpad_left){
+                Elbow.setPosition(0.9);
+            }
+
             if (gamepad2.b){
 
                 if(seatBeltL.getPosition() > 0.6) {
-                    seatBeltL.setDirection(Servo.Direction.REVERSE);
                     seatBeltL.setPosition(0.5);
                 } else {
-                    seatBeltL.setDirection(Servo.Direction.FORWARD);
                     seatBeltL.setPosition(0.8);
                 }
 
