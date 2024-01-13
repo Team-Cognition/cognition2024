@@ -25,7 +25,7 @@ public class Teleop2023 extends LinearOpMode{
     Servo seatBeltR;
     Servo Elbow;
     Servo Wrist;
-
+    Servo intakeArm;
     double armPosition, gripPosition;
     double MIN_POSITION = 0, MAX_POSITION = 0.5;
 
@@ -69,7 +69,7 @@ public class Teleop2023 extends LinearOpMode{
         seatBeltR = hardwareMap.servo.get("seatBeltR");
         Elbow = hardwareMap.servo.get("Elbow");
         Wrist = hardwareMap.servo.get("Wrist");
-
+        intakeArm = hardwareMap.servo.get("intakeArm");
 
         //Reverse front motors and back left motors
         motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -112,7 +112,7 @@ public class Teleop2023 extends LinearOpMode{
                 armRight.setPower(armpower2*gamepad2.left_stick_y);
                 armLeft.setPower(armpower2*gamepad2.left_stick_y);
             }
-            else if ((!(gamepad2.dpad_down || gamepad2.dpad_up)) && !(gamepad2.a || gamepad2.b || gamepad2.x)) {
+            else if (gamepad2.left_stick_y == 0) {
                 armRight.setPower(0);
                 armLeft.setPower(0);
             }
@@ -157,19 +157,6 @@ public class Teleop2023 extends LinearOpMode{
 
 
 
-//            if (gamepad2.a) {//arm going to low junction when a is pressed
-//                arm.setPower(buttonpower);
-//              //  sleep(2000); // change
-//                arm.setPower(0.25);
-//            } else if (gamepad2.b) {//arm going to medium junction when b is pressed
-//                arm.setPower(buttonpower);
-//             //   sleep(3000); // change
-//                arm.setPower(0.25);
-//            } else if (gamepad2.x) {//arm going to high junction when x is pressed
-//                arm.setPower(buttonpower);
-//              //  sleep(4250); // change
-//                arm.setPower(0.25);
-//            }
 
          if (gamepad1.left_bumper) {
 
@@ -190,57 +177,63 @@ public class Teleop2023 extends LinearOpMode{
             }
 
             if(gamepad2.dpad_down) {
-
-                Elbow.setPosition(0.6);
-
-                //                Elbow.setDirection(Servo.Direction.FORWARD);
-//                if(Elbow.getPosition() > 0.5) {
-//                    Elbow.setPosition(0.0);
-//                } else {
-//                    Elbow.setPosition(1.0);
+            // Elbow.setPosition(1.0);
+                   Elbow.setPosition(0.9);
+                Wrist.setPosition(0.5);
                 }
             if(gamepad2.dpad_up) {
-                Elbow.setDirection(Servo.Direction.REVERSE);
-                Elbow.setPosition(1.0);
-
-
-//                telemetry.addData("targetPosition", Elbow.getPosition());
-//                telemetry.addData("direction", Elbow.getDirection());
-//                telemetry.update();
-//                sleep(1500);
+                Elbow.setPosition(0.1);
+                Wrist.setPosition(0.1);
             }
 
             if (gamepad2.dpad_right){
-                Elbow.setDirection(Servo.Direction.REVERSE);
-                Elbow.setPosition(0.5);
+                Wrist.setPosition(0.0);
             }
 
             if (gamepad2.dpad_left){
-                Elbow.setPosition(0.9);
+                Wrist.setPosition(1.0);
+            }
+            if (gamepad2.a){
+                intakeArm.setPosition(0.0);
+            }
+            if (gamepad2.b){
+                intakeArm.setPosition(1.0);
             }
 
-            if (gamepad2.b){
 
-                if(seatBeltL.getPosition() > 0.6) {
-                    seatBeltL.setPosition(0.5);
-                } else {
-                    seatBeltL.setPosition(0.8);
-                }
+            if (gamepad2.left_bumper){
+
+
+                seatBeltR.setPosition(0.75);
+                seatBeltL.setPosition(0.0);
+
+
+            }
+            if (gamepad2.right_bumper){
+                seatBeltL.setPosition(1.0);
+                seatBeltR.setPosition(0.4);
+
 
             }
             if (gamepad2.y){
-
-                if(seatBeltR.getPosition() > 0.6) {
-                    seatBeltR.setDirection(Servo.Direction.REVERSE);
-                    seatBeltR.setPosition(0.5);
-                } else {
-                    seatBeltR.setDirection(Servo.Direction.FORWARD);
-                    seatBeltR.setPosition(0.8);
-                }
-
+                armRight.setPower(0.5);
+                armLeft.setPower(0.5);
+                Elbow.setPosition(0.1);
+                Wrist.setPosition(0.1);
+                sleep(1000);
+                armRight.setPower(0.0);
+                armLeft.setPower(0.0);
             }
 
-
+            if (gamepad2.x){
+                armRight.setPower(-0.5);
+                armLeft.setPower(-0.5);
+                Elbow.setPosition(0.9);
+                Wrist.setPosition(0.5);
+                sleep(500);
+                armRight.setPower(0.0);
+                armLeft.setPower(0.0);
+            }
 
 
 
