@@ -17,10 +17,12 @@ public class HardwarePushbot
     public DcMotor armLeft = null;
     public DcMotor intakeMotor = null;
     public Servo  launcher = null;
-   // public Servo clawServoRight= null;
-   // public Servo clawServoLeft = null;
     public Servo intakeServo = null;
-  //  public Servo intakeServoR = null;
+    public Servo seatBeltL = null;
+    public Servo seatBeltR = null;
+    public Servo Elbow = null;
+    public Servo Wrist = null;
+    public Servo intakeArm = null;
 
     public final static double CLAW_HOME = 0.0; //Starting position
     public final static double CLAWL_MIN_RANGE = 0.0; //Minimum value allowed
@@ -54,6 +56,13 @@ public class HardwarePushbot
         armLeft = hwMap.dcMotor.get("armLeft");
         launcher = hwMap.servo.get("launcher");
         intakeMotor = hwMap.dcMotor.get("intakeMotor");
+        intakeServo = hwMap.servo.get("intakeServo");
+        seatBeltL = hwMap.servo.get("seatBeltL");
+        seatBeltR = hwMap.servo.get("seatBeltR");
+        Elbow = hwMap.servo.get("Elbow");
+        Wrist = hwMap.servo.get("Wrist");
+        intakeArm = hwMap.servo.get("intakeArm");
+
 //        intakeServoL = hwMap.servo.get("intakeServoL");
 //        intakeServoR = hwMap.servo.get("intakeServoR");
 
@@ -74,6 +83,8 @@ public class HardwarePushbot
         //upperRight.setDirection(DcMotorSimple.Direction.REVERSE);
         lowerLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         lowerRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        armRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        armLeft.setDirection(DcMotorSimple.Direction.FORWARD);
     //    arm.setDirection(DcMotor.Direction.FORWARD );
 
         // Set all motors to zero power'
