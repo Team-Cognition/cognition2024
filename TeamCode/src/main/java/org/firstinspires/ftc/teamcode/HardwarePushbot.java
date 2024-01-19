@@ -80,9 +80,9 @@ public class HardwarePushbot
 //        lowerRight.setDirection(DcMotor.Direction.FORWARD);
 
         upperLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        //upperRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        upperRight.setDirection(DcMotorSimple.Direction.REVERSE);
         lowerLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        lowerRight.setDirection(DcMotorSimple.Direction.REVERSE);
+//        lowerRight.setDirection(DcMotorSimple.Direction.REVERSE);
         armRight.setDirection(DcMotorSimple.Direction.FORWARD);
         armLeft.setDirection(DcMotorSimple.Direction.FORWARD);
     //    arm.setDirection(DcMotor.Direction.FORWARD );
@@ -92,10 +92,10 @@ public class HardwarePushbot
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        upperLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        upperRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lowerLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lowerRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        upperLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        upperRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        lowerLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        lowerRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
       //  arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 

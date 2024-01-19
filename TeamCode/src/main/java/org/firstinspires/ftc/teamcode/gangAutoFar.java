@@ -18,8 +18,8 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import java.util.List;
 
 @Config
-@Autonomous(name = "gangAuto", group = "Autonomous")
-public class gangAuto extends LinearOpMode {
+@Autonomous(name = "gangAutoFar", group = "Autonomous")
+public class gangAutoFar extends LinearOpMode {
 
     HardwarePushbot robot = new HardwarePushbot();
 
@@ -50,64 +50,55 @@ public class gangAuto extends LinearOpMode {
 
         initTfod();
 
-//        robot.init(hardwareMap);
-
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Pose2d startPose = new Pose2d(-35, -62, Math.toRadians(90));
 
         drive.setPoseEstimate(startPose);
 
-        // mid
         TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(startPose)
-//                .addDisplacementMarker(() -> {
-//                    this.closeClaw();
-//                })
-                .forward(70)
-//                .addDisplacementMarker(() -> {
-//                    this.openClaw();
-//                })
+                .forward(45)
                 .build();
 
-        // left
         TrajectorySequence trajSeqZero = drive.trajectorySequenceBuilder(startPose)
                 .forward(45)
                 .turn(Math.toRadians(-120))
                 .build();
 
-        // right
         TrajectorySequence trajSeqTwo = drive.trajectorySequenceBuilder(startPose)
+                .strafeRight(10)
                 .forward(45)
-                .turn(Math.toRadians(120))
                 .build();
-
-//        robot.init(hardwareMap);
 
         waitForStart();
 
         if (opModeIsActive()) {
 
+            boolean hasStarted = false;
+            int countLoop = 0;
+
             while (opModeIsActive()) {
 
                 // idk if it reinitializes in the loop so this
                 // is a precaution
+                if (!hasStarted){
 
                     // object in middle
                     if(telemetryTfod() == 1) {
                         drive.followTrajectorySequence(trajSeq);
-                        sleep(30000);
+                        hasStarted = true;
                     }
                     // object in left
                     else if (telemetryTfod() == 0) {
                         drive.followTrajectorySequence(trajSeqZero);
-                        sleep(30000);
-
-                    } else if (telemetryTfod()==2) {
+                        hasStarted = true;
+                        // object in right
+                    } else if (telemetryTfod() == 2) {
                         drive.followTrajectorySequence(trajSeqTwo);
-                        sleep(30000);
-
+                        hasStarted = true;
                     }
                 }
+
                 // Push telemetry to the Driver Station.
                 telemetry.update();
 
@@ -121,6 +112,7 @@ public class gangAuto extends LinearOpMode {
 
             // Share the CPU.
 //                sleep(20);
+        }
 
 
         if (!isStopRequested()){
@@ -261,16 +253,6 @@ public class gangAuto extends LinearOpMode {
         return (numPos);
 
     }   // end method telemetryTfod()
-
-    public void openClaw() {
-        robot.seatBeltR.setPosition(0.6);
-        robot.seatBeltL.setPosition(0.3);
-    }
-
-    public void closeClaw() {
-        robot.seatBeltL.setPosition(0.6);
-        robot.seatBeltR.setPosition(0.3);
-    }
 
 }
 

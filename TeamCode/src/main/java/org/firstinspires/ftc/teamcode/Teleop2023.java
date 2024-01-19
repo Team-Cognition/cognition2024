@@ -177,11 +177,11 @@ public class Teleop2023 extends LinearOpMode{
 
             if(gamepad2.dpad_down) {
             // Elbow.setPosition(1.0);
-                   Elbow.setPosition(0.65);
+                   Elbow.setPosition(0.55);
                 Wrist.setPosition(0.5);
                 }
             if(gamepad2.dpad_up) {
-                Elbow.setPosition(0.15);
+                Elbow.setPosition(0.0);
                 Wrist.setPosition(0.05);
             }
 
@@ -196,27 +196,22 @@ public class Teleop2023 extends LinearOpMode{
 
 
             if (gamepad2.left_bumper){
+                // opens
 
-
-                seatBeltR.setPosition(0.75);
-                seatBeltL.setPosition(0.0);
+                seatBeltR.setPosition(0.6);
+                seatBeltL.setPosition(0.3);
 
 
             }
             if (gamepad2.right_bumper){
-                seatBeltL.setPosition(1.0);
-                seatBeltR.setPosition(0.4);
+                // closes
+                seatBeltL.setPosition(0.6);
+                seatBeltR.setPosition(0.3);
 
 
             }
             if (gamepad2.y){
-                armRight.setPower(0.5);
-                armLeft.setPower(0.5);
-                Elbow.setPosition(0.1);
-                Wrist.setPosition(0.05);
-                sleep(1000);
-                armRight.setPower(0.0);
-                armLeft.setPower(0.0);
+                Elbow.setPosition(0.5);
             }
 
             if (gamepad2.x){
