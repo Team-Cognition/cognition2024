@@ -95,14 +95,8 @@ public class Teleop2023 extends LinearOpMode{
             double x = gamepad1.left_stick_x; // Counteract imperfect strafing
             double rx = -gamepad1.right_stick_x;
 
-            if ((runtime.seconds() > HALF_TIME) && !secondHalf) {
-                secondHalf = true;
-            }
 
-            if (!secondHalf) {
-                telemetry.addData(">", "Halftime Alert Countdown: %3.0f Sec \n", (HALF_TIME - runtime.seconds()));
-            }
-
+            //Control the misumi slides
             if (gamepad2.left_stick_y>0) {
                 armRight.setPower(armpower*gamepad2.left_stick_y);
                 armLeft.setPower(armpower*gamepad2.left_stick_y);
@@ -117,30 +111,24 @@ public class Teleop2023 extends LinearOpMode{
 
 
 
-
+            //Makes the robot move slower
             if(gamepad1.right_bumper && fastMode){
-
                 mainPower= mainPower - 0.3;
                 fastMode = false;
-
             }
             else if(gamepad1.right_bumper && !fastMode){
-
                 mainPower= mainPower +0.3;
                 fastMode = true;
-
             }
 
 
 
             if (gamepad2.left_trigger > 0) {
-
                 telemetry.addData("POSITION", intakeServo.getPosition());
                 telemetry.addData("adirection", intakeServo.getDirection());
                 telemetry.update();
                 intakeServo.setDirection(Servo.Direction.REVERSE);
                 intakeServo.setPosition(1.0);
-
             } if (gamepad2.right_trigger > 0) {
                 telemetry.addData("POSITION", intakeServo.getPosition());
                 telemetry.update();
@@ -176,8 +164,7 @@ public class Teleop2023 extends LinearOpMode{
             }
 
             if(gamepad2.dpad_down) {
-            // Elbow.setPosition(1.0);
-                   Elbow.setPosition(0.65);
+                Elbow.setPosition(0.65);
                 Wrist.setPosition(0.5);
                 }
             if(gamepad2.dpad_up) {
@@ -247,51 +234,9 @@ public class Teleop2023 extends LinearOpMode{
 
 
 
-            if(gamepad2.a&& !apressed){
 
-                apressed=true;
 
             }
-
-//            if(apressed==true){
-//                timer=timer+1;
-//         //   arm.setPower(buttonpower);
-//                telemetry.addData("timer>", timer);
-//                telemetry.update();
-//            }
-//
-//
-//            if(timer>1000){
-//
-//                arm.setPower(0);
-//                apressed = false;
-//                timer=0;
-//
-//
-//            }
-//
-//            if(gamepad2.b&& bpressed==false){
-//
-//                bpressed=true;
-//
-//            }
-//
-//            if(bpressed==true){
-//                timer=timer+1;
-//                arm.setPower(buttonpower);
-//                telemetry.addData("timer>", timer);
-//                telemetry.update();
-//            }
-//
-//
-//            if(timer>1500){
-//
-//                arm.setPower(0);
-//                bpressed = false;
-//                timer=0;
-//
-//
-//            }
 
 
 
@@ -309,4 +254,3 @@ public class Teleop2023 extends LinearOpMode{
 
     }
 
-}
