@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 
-@TeleOp(name="Test: By Curious Monkey", group ="Test")
-public class Teleop2023 extends LinearOpMode{
+@TeleOp(name="telldat fool", group ="Test")
+public class telldat extends LinearOpMode{
     // Declare our motors
     // Make sure your ID's match your configuration
     DcMotor motorFrontLeft;
@@ -18,13 +18,10 @@ public class Teleop2023 extends LinearOpMode{
     DcMotor motorFrontRight;
     DcMotor motorBackRight;
     Servo launcher;
+    Servo claw;
+    Servo clawPivot;
     DcMotor armRight;
     DcMotor armLeft;
-    Servo intakeServo;
-    Servo seatBeltL;
-    Servo seatBeltR;
-    Servo Elbow;
-    Servo Wrist;
     double armPosition, gripPosition;
     double MIN_POSITION = 0, MAX_POSITION = 0.5;
 
@@ -43,15 +40,15 @@ public class Teleop2023 extends LinearOpMode{
     public final static double CLAW_HOME = 0.0; //Starting position
     public final static double CLAW_MIN_RANGE = 0.0; //Minimum value allowed
     public final static double CLAW_MAX_RANGE = 0.4; //Maximum Range: It might break past this point
-    public final double armpower = 0.5;
+    public final double armpower = 1;
 
 
     public final double buttonpower = 1;
-    public final double armpower2 = 0.75;
+    public final double armpower2 = -1;
     public  int timer = 0;
     boolean apressed = false;
     boolean bpressed = false;
-    double mainPower = 0.7; // maintain ratio, change this to change speed of robot
+    double mainPower = 0.55; // maintain ratio, change this to change speed of robot
     boolean fastMode = true;
 
     public void runOpMode() throws InterruptedException {
@@ -62,20 +59,17 @@ public class Teleop2023 extends LinearOpMode{
         motorBackRight = hardwareMap.dcMotor.get("lowerRight"); //motorBackRight
         launcher = hardwareMap.servo.get("launcher");
         armRight = hardwareMap.dcMotor.get("armRight"); //Calling the arm
-        armLeft = hardwareMap.dcMotor.get("armLeft");
-        intakeServo = hardwareMap.servo.get("intakeServo");
-        seatBeltL = hardwareMap.servo.get("seatBeltL");
-        seatBeltR = hardwareMap.servo.get("seatBeltR");
-        Elbow = hardwareMap.servo.get("Elbow");
-        Wrist = hardwareMap.servo.get("Wrist");
+        armLeft = hardwareMap.dcMotor.get("armLeft"); //Calling the arm
 
-        //Reverse front motors and back left motors
+        claw = hardwareMap.servo.get("claw");
+        clawPivot = hardwareMap.servo.get("clawPivot");
+        //Reverse front motors and back right motors
         motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-//      motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        armRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        armLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+//        motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+//         motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+//        motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        armRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        armLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         telemetry.addData("TeleOp>", "Press Start");
         telemetry.update();
@@ -88,7 +82,9 @@ public class Teleop2023 extends LinearOpMode{
         if (isStopRequested()) return;
 
         armPosition = .5;                   // set arm to half way up.
-        gripPosition = MAX_POSITION;        // set grip to full open.
+        gripPosition = MAX_POSITION;
+
+// set grip to full open.
 
         while (opModeIsActive()) {
             double y = gamepad1.left_stick_y; // Remember, this is reversed!
@@ -103,126 +99,81 @@ public class Teleop2023 extends LinearOpMode{
                 telemetry.addData(">", "Halftime Alert Countdown: %3.0f Sec \n", (HALF_TIME - runtime.seconds()));
             }
 
-            if (gamepad2.left_stick_y>0) {
-                armRight.setPower(armpower*gamepad2.left_stick_y);
-                armLeft.setPower(armpower*gamepad2.left_stick_y);
-            } else if (gamepad2.left_stick_y<0) {
-                armRight.setPower(armpower2*gamepad2.left_stick_y);
-                armLeft.setPower(armpower2*gamepad2.left_stick_y);
-            }
-            else if (gamepad2.left_stick_y == 0) {
+            if (gamepad2.dpad_up) {
+                armRight.setPower(armpower*0.5);
+                armLeft.setPower(armpower*0.5);
+            } else if (gamepad2.dpad_down) {
+                armRight.setPower(armpower2*0.5);
+                armLeft.setPower(armpower2*0.5);
+            } else if ((!(gamepad2.dpad_down || gamepad2.dpad_up)) && !(gamepad2.a || gamepad2.b || gamepad2.x)) {
                 armRight.setPower(0);
                 armLeft.setPower(0);
             }
 
 
-
-
-            if(gamepad1.right_bumper && fastMode){
+            if(gamepad1.right_bumper && fastMode == true){
 
                 mainPower= mainPower - 0.3;
                 fastMode = false;
 
             }
-            else if(gamepad1.right_bumper && !fastMode){
+            else if(gamepad1.right_bumper && fastMode == false){
 
                 mainPower= mainPower +0.3;
                 fastMode = true;
 
             }
 
-
-
-            if (gamepad2.left_trigger > 0) {
-
-                telemetry.addData("POSITION", intakeServo.getPosition());
-                telemetry.addData("adirection", intakeServo.getDirection());
-                telemetry.update();
-                intakeServo.setDirection(Servo.Direction.REVERSE);
-                intakeServo.setPosition(1.0);
-
-            } if (gamepad2.right_trigger > 0) {
-                telemetry.addData("POSITION", intakeServo.getPosition());
-                telemetry.update();
-                intakeServo.setDirection(Servo.Direction.FORWARD);
-                intakeServo.setPosition(1.0);
-
-            } if (gamepad2.right_trigger == 0 && gamepad2.left_trigger == 0) {
-                telemetry.addData("POSITION", intakeServo.getPosition());
-                telemetry.update();
-                intakeServo.setDirection(Servo.Direction.FORWARD);
-                intakeServo.setPosition(0.5);
+            if (gamepad2.a) { // low
+                armRight.setPower(armpower*0.75);
+                armLeft.setPower(armpower*0.75);
+                sleep(800);
+                armRight.setPower(0);
+                armLeft.setPower(0);
+            } if (gamepad2.b) { // high
+                armRight.setPower(armpower*0.75);
+                armLeft.setPower(armpower*0.75);
+                sleep(3000);
+                armRight.setPower(0);
+                armLeft.setPower(0);
+            } if (gamepad2.x) {  // mid
+                armRight.setPower(armpower*0.75);
+                armLeft.setPower(armpower*0.75);
+                sleep(1100);
+                armRight.setPower(0);
+                armLeft.setPower(0);
             }
 
 
 
+//            if (gamepad2.a) {//arm going to low junction when a is pressed
+//                arm.setPower(buttonpower);
+//              //  sleep(2000); // change
+//                arm.setPower(0.25);
+//            } else if (gamepad2.b) {//arm going to medium junction when b is pressed
+//                arm.setPower(buttonpower);
+//             //   sleep(3000); // change
+//                arm.setPower(0.25);
+//            } else if (gamepad2.x) {//arm going to high junction when x is pressed
+//                arm.setPower(buttonpower);
+//              //  sleep(4250); // change
+//                arm.setPower(0.25);
+//            }
 
-         if (gamepad1.left_bumper) {
-
-             if (gripPosition < MAX_POSITION) {
-                 gripPosition=gripPosition+0.7;
-                 telemetry.addData("bumperLeft", "hello");
-             } else if (gripPosition > MIN_POSITION) {
-                 gripPosition=gripPosition-0.7;
-                 telemetry.addData("bumperRight", "hi");
-
-             }
-             telemetry.addData("gripPosition", gripPosition);
-             telemetry.update();
-             SERVOposition = Range.clip(gripPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
-             telemetry.addData("targetPosition", SERVOposition);
-             telemetry.update();
-             launcher.setPosition(SERVOposition);
+            if (gamepad2.left_trigger > 0.0 && gripPosition < MAX_POSITION) {
+                gripPosition=gripPosition+0.01;
+                telemetry.addData("bumperLeft", "hello");
             }
-
-            if(gamepad2.dpad_down) {
-            // Elbow.setPosition(1.0);
-                   Elbow.setPosition(0.55);
-                Wrist.setPosition(0.5);
-                }
-            if(gamepad2.dpad_up) {
-                Elbow.setPosition(0.0);
-                Wrist.setPosition(0.05);
-            }
-
-            if (gamepad2.dpad_right){
-                Wrist.setPosition(0.0);
-            }
-
-            if (gamepad2.dpad_left){
-                Wrist.setPosition(1.0);
-            }
-
-
-
-            if (gamepad2.left_bumper){
-                // opens
-
-                seatBeltR.setPosition(0.6);
-                seatBeltL.setPosition(0.3);
-
+            if (gamepad2.right_trigger > 0.0 && gripPosition > MIN_POSITION) {
+                gripPosition=gripPosition-0.01;
+                telemetry.addData("bumperRight", "hi");
 
             }
-            if (gamepad2.right_bumper){
-                // closes
-                seatBeltL.setPosition(0.6);
-                seatBeltR.setPosition(0.3);
+            telemetry.addData("gripPosition", gripPosition);
+            telemetry.update();
+            SERVOposition = Range.clip(gripPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
+            launcher.setPosition(SERVOposition);
 
-
-            }
-            if (gamepad2.y){
-                Elbow.setPosition(0.5);
-            }
-
-            if (gamepad2.x){
-                armRight.setPower(-0.5);
-                armLeft.setPower(-0.5);
-                Elbow.setPosition(0.7);
-                Wrist.setPosition(0.5);
-                sleep(500);
-                armRight.setPower(0.0);
-                armLeft.setPower(0.0);
-            }
 
 
 
@@ -230,22 +181,25 @@ public class Teleop2023 extends LinearOpMode{
             // This ensures all the powers maintain the same ratio, but only when
             // at least one is out of the range [-1, 1]
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double frontLeftPower = (y - x*1.2 + rx) / denominator;
-            double backLeftPower = (y + x*1.2 + rx) / denominator;
-            double frontRightPower = (y + x*1.2 - rx) / denominator;
-            double backRightPower = (y - x*1.2 - rx) / denominator;
+            double frontLeftPower = (y + rx + x) / denominator;
+            double backLeftPower = (y - rx + x) / denominator;
+            double frontRightPower = (y - rx - x) / denominator;
+            double backRightPower = (y + rx - x) / denominator;
             //Slower speed so that is easier to control
             motorFrontLeft.setPower(frontLeftPower * mainPower);
-            motorBackLeft.setPower(backLeftPower * mainPower );
+            motorBackLeft.setPower(backLeftPower * mainPower);
             motorFrontRight.setPower(frontRightPower * mainPower);
             motorBackRight.setPower(backRightPower * mainPower);
 
 
 
-            if(gamepad2.a&& !apressed){
+            if(gamepad2.a){
+                claw.setPosition(0.002);
 
-                apressed=true;
-
+//                if(claw.getPosition() >0) {
+//                    claw.setPosition(0);
+//                } else {
+//                }
             }
 
 //            if(apressed==true){
@@ -294,9 +248,9 @@ public class Teleop2023 extends LinearOpMode{
 
 
 
-        telemetry.addData("Game>", "Over");
+            telemetry.addData("Game>", "Over");
 
-        telemetry.update();
+            telemetry.update();
 
 
         }
