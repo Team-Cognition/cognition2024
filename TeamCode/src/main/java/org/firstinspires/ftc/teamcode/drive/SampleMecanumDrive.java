@@ -22,6 +22,8 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
@@ -49,6 +51,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.encoderTicksTo
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kA;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kStatic;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
+import static java.lang.Thread.sleep;
 
 /*
  * Simple mecanum drive hardware implementation for REV hardware.
@@ -58,7 +61,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
-    public static double LATERAL_MULTIPLIER = 1;
+    public static double LATERAL_MULTIPLIER = 1.75;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -73,6 +76,17 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
+
+    public DcMotor  armRight = null;
+    public DcMotor armLeft = null;
+    public DcMotor intakeMotor = null;
+    public Servo  launcher = null;
+    public Servo intakeServo = null;
+    public Servo seatBeltL = null;
+    public Servo seatBeltR = null;
+    public Servo Elbow = null;
+    public Servo Wrist = null;
+    public Servo intakeArm = null;
 
     private IMU imu;
     private VoltageSensor batteryVoltageSensor;
@@ -105,6 +119,17 @@ public class SampleMecanumDrive extends MecanumDrive {
         rightRear = hardwareMap.get(DcMotorEx.class, "lowerRight");
         rightFront = hardwareMap.get(DcMotorEx.class, "upperRight");
 
+        armRight = hardwareMap.dcMotor.get("armRight");
+        armLeft = hardwareMap.dcMotor.get("armLeft");
+        launcher = hardwareMap.servo.get("launcher");
+        intakeMotor = hardwareMap.dcMotor.get("intakeMotor");
+        intakeServo = hardwareMap.servo.get("intakeServo");
+        seatBeltL = hardwareMap.servo.get("seatBeltL");
+        seatBeltR = hardwareMap.servo.get("seatBeltR");
+        Elbow = hardwareMap.servo.get("Elbow");
+        Wrist = hardwareMap.servo.get("Wrist");
+        intakeArm = hardwareMap.servo.get("intakeArm");
+
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
         for (DcMotorEx motor : motors) {
@@ -134,7 +159,10 @@ public class SampleMecanumDrive extends MecanumDrive {
         List<Integer> lastTrackingEncVels = new ArrayList<>();
 
         // TODO: if desired, use setLocalizer() to change the localization method
-//        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
+
+//        List<Integer> leftEncoderPos = Arrays.asList(0, 0, 0);
+//        List<Integer> rightEncoderPos = Arrays.asList(0, 0, 0);
+        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels));
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(
                 follower, HEADING_PID, batteryVoltageSensor,
@@ -173,6 +201,42 @@ public class SampleMecanumDrive extends MecanumDrive {
     public void turn(double angle) {
         turnAsync(angle);
         waitForIdle();
+    }
+
+    public void liftArm() {
+        this.armRight.setPower(0.5);
+        this.armLeft.setPower(0.5);
+        this.Elbow.setPosition(0.1);
+        this.Wrist.setPosition(0.1);
+
+
+    }
+
+    public void liftArmEnd() {
+        this.armRight.setPower(0.0);
+        this.armLeft.setPower(0.0);
+    }
+
+    public void lowerArm() {
+        this.armRight.setPower(-0.5);
+        this.armLeft.setPower(-0.5);
+        this.Elbow.setPosition(0.9);
+        this.Wrist.setPosition(0.5);
+    }
+
+    public void lowerArmFinal() {
+        this.armRight.setPower(0.0);
+        this.armLeft.setPower(0.0);
+    }
+
+    public void openClaw() {
+        this.seatBeltR.setPosition(0.6);
+        this.seatBeltL.setPosition(0.3);
+    }
+
+    public void closeClaw() {
+        this.seatBeltL.setPosition(0.6);
+        this.seatBeltR.setPosition(0.3);
     }
 
     public void followTrajectoryAsync(Trajectory trajectory) {
@@ -288,10 +352,10 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        leftFront.setPower(v * 0.465 * 1.125);
-        leftRear.setPower(v1 * 0.465* 1.125);
-        rightRear.setPower(v2 * 0.42* 1.125);
-        rightFront.setPower(v3 * 0.42* 1.125);
+        leftFront.setPower(v * 0.465 * 1.125 * 1.5);
+        leftRear.setPower(v1 * 0.465* 1.125 * 1.5);
+        rightRear.setPower(v2 * 0.465* 1.125 * 1.5);
+        rightFront.setPower(v3 * 0.465* 1.125 * 1.5);
     }
 
     @Override
