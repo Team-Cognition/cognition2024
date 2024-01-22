@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -22,6 +23,7 @@ import java.util.List;
 public class gangAuto extends LinearOpMode {
 
     HardwarePushbot robot = new HardwarePushbot();
+
 
     // TFOD_MODEL_ASSET points to a model file stored in the project Asset location,
     // this is only used for Android Studio when using models in Assets.
@@ -43,6 +45,8 @@ public class gangAuto extends LinearOpMode {
      */
     private VisionPortal visionPortal;
 
+    private ElapsedTime runtime = new ElapsedTime();
+
 
 
     @Override
@@ -60,13 +64,22 @@ public class gangAuto extends LinearOpMode {
 
         // mid
         TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(startPose)
-//                .addDisplacementMarker(() -> {
-//                    this.closeClaw();
-//                })
+                .addDisplacementMarker(() -> {
+                    drive.openClaw();
+                    sleep(1000);
+                    drive.closeClaw();
+                })
+                .addDisplacementMarker(() -> {
+                    drive.liftArm();
+                    sleep(1000);
+                    drive.liftArmEnd();
+                })
                 .forward(70)
-//                .addDisplacementMarker(() -> {
-//                    this.openClaw();
-//                })
+                .addDisplacementMarker(() -> {
+                    drive.lowerArm();
+                    sleep(500);
+                    drive.lowerArmFinal();
+                })
                 .build();
 
         // left
@@ -85,6 +98,8 @@ public class gangAuto extends LinearOpMode {
 
         waitForStart();
 
+        runtime.reset();
+
         if (opModeIsActive()) {
 
             while (opModeIsActive()) {
@@ -95,17 +110,16 @@ public class gangAuto extends LinearOpMode {
                     // object in middle
                     if(telemetryTfod() == 1) {
                         drive.followTrajectorySequence(trajSeq);
-                        sleep(30000);
+                        sleep(35000);
                     }
                     // object in left
                     else if (telemetryTfod() == 0) {
                         drive.followTrajectorySequence(trajSeqZero);
-                        sleep(30000);
+                        sleep(35000);
 
-                    } else if (telemetryTfod()==2) {
+                    } else if ((runtime.seconds() > 5) && telemetryTfod()==3) {
                         drive.followTrajectorySequence(trajSeqTwo);
-                        sleep(30000);
-
+                        sleep(35000);
                     }
                 }
                 // Push telemetry to the Driver Station.
