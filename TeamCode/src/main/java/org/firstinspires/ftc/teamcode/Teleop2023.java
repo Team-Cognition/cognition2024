@@ -23,7 +23,8 @@ public class Teleop2023 extends LinearOpMode{
     Servo intakeServo;
     Servo seatBeltL;
     Servo seatBeltR;
-    Servo Elbow;
+    Servo ElbowL;
+    Servo ElbowR;
     Servo Wrist;
     double armPosition, gripPosition;
     double MIN_POSITION = 0, MAX_POSITION = 0.5;
@@ -66,7 +67,8 @@ public class Teleop2023 extends LinearOpMode{
         intakeServo = hardwareMap.servo.get("intakeServo");
         seatBeltL = hardwareMap.servo.get("seatBeltL");
         seatBeltR = hardwareMap.servo.get("seatBeltR");
-        Elbow = hardwareMap.servo.get("Elbow");
+        ElbowL = hardwareMap.servo.get("ElbowL");
+        ElbowR = hardwareMap.servo.get("ElbowR");
         Wrist = hardwareMap.servo.get("Wrist");
 
         //Reverse front motors and back left motors
@@ -176,21 +178,22 @@ public class Teleop2023 extends LinearOpMode{
             }
 
             if(gamepad2.dpad_down) {
-            // Elbow.setPosition(1.0);
-                   Elbow.setPosition(0.55);
+                   ElbowR.setPosition(0.8);
+                   ElbowL.setPosition(0.2);
                 Wrist.setPosition(0.5);
                 }
             if(gamepad2.dpad_up) {
-                Elbow.setPosition(0.0);
-                Wrist.setPosition(0.05);
+                ElbowR.setPosition(0.0);
+                ElbowL.setPosition(1.0);
+                Wrist.setPosition(0.9);
             }
 
             if (gamepad2.dpad_right){
-                Wrist.setPosition(0.0);
+                Wrist.setPosition(0.5);
             }
 
             if (gamepad2.dpad_left){
-                Wrist.setPosition(1.0);
+                Wrist.setPosition(0.9);
             }
 
 
@@ -198,26 +201,26 @@ public class Teleop2023 extends LinearOpMode{
             if (gamepad2.left_bumper){
                 // opens
 
-                seatBeltR.setPosition(0.6);
+                seatBeltR.setPosition(0.65);
                 seatBeltL.setPosition(0.3);
 
 
             }
             if (gamepad2.right_bumper){
                 // closes
-                seatBeltL.setPosition(0.6);
-                seatBeltR.setPosition(0.3);
+                seatBeltL.setPosition(0.45);
+                seatBeltR.setPosition(0.45);
 
 
             }
             if (gamepad2.y){
-                Elbow.setPosition(0.5);
+//                Elbow.setPosition(0.5);
             }
 
             if (gamepad2.x){
                 armRight.setPower(-0.5);
                 armLeft.setPower(-0.5);
-                Elbow.setPosition(0.7);
+//                Elbow.setPosition(0.7);
                 Wrist.setPosition(0.5);
                 sleep(500);
                 armRight.setPower(0.0);
