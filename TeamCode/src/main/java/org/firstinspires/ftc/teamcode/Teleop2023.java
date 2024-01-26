@@ -178,11 +178,13 @@ public class Teleop2023 extends LinearOpMode{
             }
 
             if(gamepad2.dpad_down) {
-                   ElbowR.setPosition(0.8);
-                   ElbowL.setPosition(0.2);
+                // Moves elbow down and sets wrist in position to pick up a pixel
+                ElbowR.setPosition(0.8);
+                ElbowL.setPosition(0.2);
                 Wrist.setPosition(0.5);
                 }
             if(gamepad2.dpad_up) {
+                // Moves elbow up and set wrist in position to drop pixel on backdrop
                 ElbowR.setPosition(0.0);
                 ElbowL.setPosition(1.0);
                 Wrist.setPosition(0.9);
@@ -199,7 +201,7 @@ public class Teleop2023 extends LinearOpMode{
 
 
             if (gamepad2.left_bumper){
-                // opens
+                // opens claw
 
                 seatBeltR.setPosition(0.65);
                 seatBeltL.setPosition(0.3);
@@ -207,7 +209,7 @@ public class Teleop2023 extends LinearOpMode{
 
             }
             if (gamepad2.right_bumper){
-                // closes
+                // closes claw
                 seatBeltL.setPosition(0.45);
                 seatBeltR.setPosition(0.45);
 
