@@ -20,7 +20,8 @@ public class Teleop2023 extends LinearOpMode{
     Servo launcher;
     DcMotor armRight;
     DcMotor armLeft;
-    DcMotor hangMotor;
+    DcMotor hangMotorR;
+    DcMotor hangMotorL;
     Servo intakeServo;
     Servo seatBeltL;
     Servo seatBeltR;
@@ -65,7 +66,8 @@ public class Teleop2023 extends LinearOpMode{
         launcher = hardwareMap.servo.get("launcher");
         armRight = hardwareMap.dcMotor.get("armRight"); //Calling the arm
         armLeft = hardwareMap.dcMotor.get("armLeft");
-        hangMotor = hardwareMap.dcMotor.get("hangMotor");
+        hangMotorR = hardwareMap.dcMotor.get("hangMotorR");
+        hangMotorL = hardwareMap.dcMotor.get("hangMotorL");
         intakeServo = hardwareMap.servo.get("intakeServo");
         seatBeltL = hardwareMap.servo.get("seatBeltL");
         seatBeltR = hardwareMap.servo.get("seatBeltR");
@@ -110,90 +112,16 @@ public class Teleop2023 extends LinearOpMode{
             if (gamepad2.left_stick_y>0) {
                 armRight.setPower(armpower*gamepad2.left_stick_y);
                 armLeft.setPower(armpower*gamepad2.left_stick_y);
-//                hangMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-//                hangMotor.setPower(armpower*1.5*-gamepad2.left_stick_y);
             } else if (gamepad2.left_stick_y<0) {
                 armLeft.setPower(armpower2*gamepad2.left_stick_y);
                 armRight.setPower(armpower2*gamepad2.left_stick_y);
-//                hangMotor.setPower(armpower2*16*-gamepad2.left_stick_y);
             }
             else if (gamepad2.left_stick_y == 0) {
                 armRight.setPower(0);
                 armLeft.setPower(0);
-                hangMotor.setPower(0);
             }
 
 
-            if (gamepad2.left_stick_button) {
-                hangMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-                hangMotor.setPower(15);
-            }
-
-            if (gamepad2.right_stick_button) {
-                hangMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-                hangMotor.setPower(15);
-                sleep(1500);
-                hangMotor.setPower(0.1);
-
-            }
-
-
-            if(gamepad1.right_bumper && fastMode){
-
-                mainPower= mainPower - 0.3;
-                fastMode = false;
-
-            }
-            else if(gamepad1.right_bumper && !fastMode){
-
-                mainPower= mainPower +0.3;
-                fastMode = true;
-
-            }
-
-
-
-            if (gamepad2.left_trigger > 0) {
-
-                telemetry.addData("POSITION", intakeServo.getPosition());
-                telemetry.addData("adirection", intakeServo.getDirection());
-                telemetry.update();
-                intakeServo.setDirection(Servo.Direction.REVERSE);
-                intakeServo.setPosition(1.0);
-
-            } if (gamepad2.right_trigger > 0) {
-                telemetry.addData("POSITION", intakeServo.getPosition());
-                telemetry.update();
-                intakeServo.setDirection(Servo.Direction.FORWARD);
-                intakeServo.setPosition(1.0);
-
-            } if (gamepad2.right_trigger == 0 && gamepad2.left_trigger == 0) {
-                telemetry.addData("POSITION", intakeServo.getPosition());
-                telemetry.update();
-                intakeServo.setDirection(Servo.Direction.FORWARD);
-                intakeServo.setPosition(0.5);
-            }
-
-
-
-
-         if (gamepad1.left_bumper) {
-
-             if (gripPosition < MAX_POSITION) {
-                 gripPosition=gripPosition+0.7;
-                 telemetry.addData("bumperLeft", "hello");
-             } else if (gripPosition > MIN_POSITION) {
-                 gripPosition=gripPosition-0.7;
-                 telemetry.addData("bumperRight", "hi");
-
-             }
-             telemetry.addData("gripPosition", gripPosition);
-             telemetry.update();
-             SERVOposition = Range.clip(gripPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
-             telemetry.addData("targetPosition", SERVOposition);
-             telemetry.update();
-             launcher.setPosition(SERVOposition);
-            }
 
             if(gamepad2.dpad_down) {
                 // Moves elbow down and sets wrist in position to pick up a pixel
@@ -218,34 +146,31 @@ public class Teleop2023 extends LinearOpMode{
 
 
 
-            if (gamepad2.left_bumper){
+            if (gamepad2.left_bumper) {
                 // opens claw
 
                 seatBeltR.setPosition(0.6);
-                seatBeltL.setPosition(0.35);
-
-
+                seatBeltL.setPosition(0.3);
             }
-            if (gamepad2.right_bumper){
+
+            if (gamepad2.right_bumper) {
                 // closes claw
                 seatBeltL.setPosition(0.45);
                 seatBeltR.setPosition(0.45);
-
-
-            }
-            if (gamepad2.y){
-//                Elbow.setPosition(0.5);
             }
 
-            if (gamepad2.x){
-                armRight.setPower(-0.5);
-                armLeft.setPower(-0.5);
-//                Elbow.setPosition(0.7);
-                Wrist.setPosition(0.5);
-                sleep(500);
-                armRight.setPower(0.0);
-                armLeft.setPower(0.0);
+
+
+
+            if (gamepad1.left_trigger > 0){
+                launcher.setPosition(0.7);
             }
+            if (gamepad1.right_trigger > 0){
+                launcher.setPosition(0.3);
+            }
+
+
+
 
 
 
