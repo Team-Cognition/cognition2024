@@ -50,6 +50,7 @@ public class auto1 extends LinearOpMode {
 
 
 
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -73,7 +74,7 @@ public class auto1 extends LinearOpMode {
 //                    sleep(1000);
 //                    drive.liftArmEnd();
 //                })
-                .forward(23.5)
+                .forward(24.25)
                 .addDisplacementMarker(() -> {
                     drive.setMotorPowers(0, 0, 0, 0);
                     drive.openClawR();
@@ -89,7 +90,46 @@ public class auto1 extends LinearOpMode {
                     sleep(800);
                     drive.liftArmEnd();
                     drive.setMotorPowers(0.25, 0.25, 0.25, 0.25);
-                    sleep(2550);
+                    sleep(3250);
+                    drive.setMotorPowers(0, 0, 0, 0);
+                    drive.openClawL();
+                    sleep(300);
+                    drive.closeClaw();
+                    drive.lowerArm();
+                    sleep(100);
+                    drive.lowerArmFinal();
+                })
+                .build();
+
+        // rigyht
+        TrajectorySequence trajSeqZero = drive.trajectorySequenceBuilder(startPose)
+                .addDisplacementMarker(() -> {
+                    drive.closeClaw();
+                })
+                .forward(32.5)
+                .turn(Math.toRadians(83))
+                .addDisplacementMarker(() -> {
+                    drive.setMotorPowers(0, 0, 0, 0);
+                    drive.openClawR();
+                    sleep(400);
+                    drive.raiseWrist();
+                    sleep(400);
+                    drive.setMotorPowers(0.25, 0.25, 0.25, 0.25);
+                    sleep(175);
+                    drive.setMotorPowers(0, 0, 0, 0);
+                })
+                .turn(Math.toRadians(20))
+                .strafeRight(70)
+                .back(52.5)
+                .strafeLeft(30.5)
+                .turn(Math.toRadians(150))
+                .addDisplacementMarker(() -> {
+                    drive.setMotorPowers(0, 0, 0, 0);
+                    drive.liftArm();
+                    sleep(800);
+                    drive.liftArmEnd();
+                    drive.setMotorPowers(0.25, 0.25, 0.25, 0.25);
+                    sleep(3250);
                     drive.setMotorPowers(0, 0, 0, 0);
                     drive.openClawL();
                     sleep(300);
@@ -101,19 +141,36 @@ public class auto1 extends LinearOpMode {
                 .build();
 
         // left
-        TrajectorySequence trajSeqZero = drive.trajectorySequenceBuilder(startPose)
-                .forward(45)
-                .turn(Math.toRadians(-90))
-                .build();
-
-        // right
         TrajectorySequence trajSeqTwo = drive.trajectorySequenceBuilder(startPose)
-//                .forward(45)
-                .turn(Math.toRadians(5))
                 .addDisplacementMarker(() -> {
-                    drive.openClawR();
-                    sleep(1000);
                     drive.closeClaw();
+                })
+                .forward(32.5)
+                .turn(Math.toRadians(-83))
+                .addDisplacementMarker(() -> {
+                    drive.setMotorPowers(0, 0, 0, 0);
+                    drive.openClawR();
+                    sleep(400);
+                    drive.raiseWrist();
+                    sleep(400);
+                })
+                .strafeLeft(55)
+                .forward(52.5)
+                .strafeRight(33.5)
+                .addDisplacementMarker(() -> {
+                    drive.setMotorPowers(0, 0, 0, 0);
+                    drive.liftArm();
+                    sleep(800);
+                    drive.liftArmEnd();
+                    drive.setMotorPowers(0.25, 0.25, 0.25, 0.25);
+                    sleep(3500);
+                    drive.setMotorPowers(0, 0, 0, 0);
+                    drive.openClawL();
+                    sleep(300);
+                    drive.closeClaw();
+                    drive.lowerArm();
+                    sleep(100);
+                    drive.lowerArmFinal();
                 })
                 .build();
 
@@ -135,13 +192,13 @@ public class auto1 extends LinearOpMode {
                     drive.followTrajectorySequence(trajSeq);
                     sleep(35000);
                 }
-                // object in left
-                else if (telemetryTfod() == 0) {
-                    drive.followTrajectorySequence(trajSeq);
+                // object in right
+                else if (telemetryTfod() == 2) {
+                    drive.followTrajectorySequence(trajSeqZero);
                     sleep(35000);
 
                 } else if ((runtime.seconds() > 5) && telemetryTfod()==3) {
-                    drive.followTrajectorySequence(trajSeq);
+                    drive.followTrajectorySequence(trajSeqTwo);
                     sleep(35000);
                 }
             }
@@ -311,6 +368,9 @@ public class auto1 extends LinearOpMode {
         visionPortal = VisionPortal.easyCreateWithDefaults(
                 hardwareMap.get(WebcamName.class, "Webcam 1"), tfod);
 
+        tfod.setMinResultConfidence((float) 0.15);
+
+
     }   // end method initTfod()
 
     /**
@@ -333,15 +393,15 @@ public class auto1 extends LinearOpMode {
             telemetry.addData("- Position", "%.0f / %.0f", x, y);
             telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
 
-            if (x < 250) {
-                telemetry.addData("Custom Object at Left", "");
-                numPos = 0;
-            }else if (x > 250) {
+            if (x < 500) {
                 telemetry.addData("Custom Object at Middle", "");
                 numPos = 1;
+            }else if (x > 500) {
+                telemetry.addData("Custom Object at Right", "");
+                numPos = 2;
             } else  {
                 telemetry.addData("Custom Object at Left", "");
-                numPos = 2;
+                numPos = 0;
             }
 
             telemetry.update();
