@@ -52,11 +52,11 @@ public class CARTIOPIUMGANGAUTO extends LinearOpMode {
                 telemetry.update();
 
                 // Save CPU resources; can resume streaming when needed.
-                if (gamepad1.dpad_down) {
-                    visionPortal.stopStreaming();
-                } else if (gamepad1.dpad_up) {
-                    visionPortal.resumeStreaming();
-                }
+//                if (gamepad1.dpad_down) {
+//                    visionPortal.stopStreaming();
+//                } else if (gamepad1.dpad_up) {
+//                    visionPortal.resumeStreaming();
+//                }
 
                 // Share the CPU.
                 sleep(20);
@@ -64,7 +64,7 @@ public class CARTIOPIUMGANGAUTO extends LinearOpMode {
         }
 
         // Save more CPU resources when camera is no longer needed.
-        visionPortal.close();
+//        visionPortal.close();
 
     }   // end runOpMode()
 
@@ -84,6 +84,10 @@ public class CARTIOPIUMGANGAUTO extends LinearOpMode {
             visionPortal = VisionPortal.easyCreateWithDefaults(
                     BuiltinCameraDirection.BACK, tfod);
         }
+
+        tfod.setMinResultConfidence((float) 0.15);
+
+//        tfod.setZoom(3.0);
 
     }   // end method initTfod()
 
@@ -112,7 +116,7 @@ public class CARTIOPIUMGANGAUTO extends LinearOpMode {
 
                 telemetry.addData("Custom Object at Middle", "");
             } else  {
-                telemetry.addData("Custom Object at Left", "");
+                telemetry.addData("Custom Object at Right", "");
             }
 
             telemetry.update();

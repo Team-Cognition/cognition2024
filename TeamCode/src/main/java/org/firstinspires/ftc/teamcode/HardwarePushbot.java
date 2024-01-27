@@ -15,12 +15,13 @@ public class HardwarePushbot
     public DcMotor  lowerRight = null;
     public DcMotor  armRight = null;
     public DcMotor armLeft = null;
-    public DcMotor intakeMotor = null;
+    public DcMotor hangMotor = null;
     public Servo  launcher = null;
     public Servo intakeServo = null;
     public Servo seatBeltL = null;
     public Servo seatBeltR = null;
-    public Servo Elbow = null;
+    public Servo ElbowR = null;
+    public Servo ElbowL = null;
     public Servo Wrist = null;
     public Servo intakeArm = null;
 
@@ -55,11 +56,12 @@ public class HardwarePushbot
         armRight = hwMap.dcMotor.get("armRight");
         armLeft = hwMap.dcMotor.get("armLeft");
         launcher = hwMap.servo.get("launcher");
-        intakeMotor = hwMap.dcMotor.get("intakeMotor");
+        hangMotor = hwMap.dcMotor.get("hangMotor");
         intakeServo = hwMap.servo.get("intakeServo");
         seatBeltL = hwMap.servo.get("seatBeltL");
         seatBeltR = hwMap.servo.get("seatBeltR");
-        Elbow = hwMap.servo.get("Elbow");
+        ElbowR = hwMap.servo.get("ElbowR");
+        ElbowL = hwMap.servo.get("ElbowL");
         Wrist = hwMap.servo.get("Wrist");
         intakeArm = hwMap.servo.get("intakeArm");
 

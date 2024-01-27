@@ -20,6 +20,7 @@ public class Teleop2023 extends LinearOpMode{
     Servo launcher;
     DcMotor armRight;
     DcMotor armLeft;
+    DcMotor hangMotor;
     Servo intakeServo;
     Servo seatBeltL;
     Servo seatBeltR;
@@ -64,6 +65,7 @@ public class Teleop2023 extends LinearOpMode{
         launcher = hardwareMap.servo.get("launcher");
         armRight = hardwareMap.dcMotor.get("armRight"); //Calling the arm
         armLeft = hardwareMap.dcMotor.get("armLeft");
+        hangMotor = hardwareMap.dcMotor.get("hangMotor");
         intakeServo = hardwareMap.servo.get("intakeServo");
         seatBeltL = hardwareMap.servo.get("seatBeltL");
         seatBeltR = hardwareMap.servo.get("seatBeltR");
@@ -108,16 +110,32 @@ public class Teleop2023 extends LinearOpMode{
             if (gamepad2.left_stick_y>0) {
                 armRight.setPower(armpower*gamepad2.left_stick_y);
                 armLeft.setPower(armpower*gamepad2.left_stick_y);
+//                hangMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+//                hangMotor.setPower(armpower*1.5*-gamepad2.left_stick_y);
             } else if (gamepad2.left_stick_y<0) {
-                armRight.setPower(armpower2*gamepad2.left_stick_y);
                 armLeft.setPower(armpower2*gamepad2.left_stick_y);
+                armRight.setPower(armpower2*gamepad2.left_stick_y);
+//                hangMotor.setPower(armpower2*16*-gamepad2.left_stick_y);
             }
             else if (gamepad2.left_stick_y == 0) {
                 armRight.setPower(0);
                 armLeft.setPower(0);
+                hangMotor.setPower(0);
             }
 
 
+            if (gamepad2.left_stick_button) {
+                hangMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+                hangMotor.setPower(15);
+            }
+
+            if (gamepad2.right_stick_button) {
+                hangMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+                hangMotor.setPower(15);
+                sleep(1500);
+                hangMotor.setPower(0.1);
+
+            }
 
 
             if(gamepad1.right_bumper && fastMode){
@@ -203,8 +221,8 @@ public class Teleop2023 extends LinearOpMode{
             if (gamepad2.left_bumper){
                 // opens claw
 
-                seatBeltR.setPosition(0.65);
-                seatBeltL.setPosition(0.3);
+                seatBeltR.setPosition(0.6);
+                seatBeltL.setPosition(0.35);
 
 
             }

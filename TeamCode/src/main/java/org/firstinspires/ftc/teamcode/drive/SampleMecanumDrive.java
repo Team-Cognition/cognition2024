@@ -79,12 +79,12 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public DcMotor  armRight = null;
     public DcMotor armLeft = null;
-    public DcMotor intakeMotor = null;
     public Servo  launcher = null;
     public Servo intakeServo = null;
     public Servo seatBeltL = null;
     public Servo seatBeltR = null;
-    public Servo Elbow = null;
+    public Servo ElbowL = null;
+    public Servo ElbowR = null;
     public Servo Wrist = null;
     public Servo intakeArm = null;
 
@@ -122,11 +122,11 @@ public class SampleMecanumDrive extends MecanumDrive {
         armRight = hardwareMap.dcMotor.get("armRight");
         armLeft = hardwareMap.dcMotor.get("armLeft");
         launcher = hardwareMap.servo.get("launcher");
-        intakeMotor = hardwareMap.dcMotor.get("intakeMotor");
         intakeServo = hardwareMap.servo.get("intakeServo");
         seatBeltL = hardwareMap.servo.get("seatBeltL");
         seatBeltR = hardwareMap.servo.get("seatBeltR");
-        Elbow = hardwareMap.servo.get("Elbow");
+        ElbowL = hardwareMap.servo.get("ElbowL");
+        ElbowR = hardwareMap.servo.get("ElbowR");
         Wrist = hardwareMap.servo.get("Wrist");
         intakeArm = hardwareMap.servo.get("intakeArm");
 
@@ -204,39 +204,49 @@ public class SampleMecanumDrive extends MecanumDrive {
     }
 
     public void liftArm() {
+        this.ElbowR.setPosition(0.5);
+        this.ElbowL.setPosition(0.5);
+        this.Wrist.setPosition(0.9);
         this.armRight.setPower(0.5);
         this.armLeft.setPower(0.5);
-        this.Elbow.setPosition(0.1);
-        this.Wrist.setPosition(0.1);
+    }
 
-
+    public void raiseWrist() {
+        this.Wrist.setPosition(0.9);
     }
 
     public void liftArmEnd() {
-        this.armRight.setPower(0.0);
-        this.armLeft.setPower(0.0);
+        this.armRight.setPower(0.01);
+        this.armLeft.setPower(0.01);
+
     }
 
     public void lowerArm() {
         this.armRight.setPower(-0.5);
         this.armLeft.setPower(-0.5);
-        this.Elbow.setPosition(0.9);
-        this.Wrist.setPosition(0.5);
     }
 
     public void lowerArmFinal() {
         this.armRight.setPower(0.0);
         this.armLeft.setPower(0.0);
+        this.ElbowR.setPosition(0.0);
+        this.ElbowL.setPosition(1.0);
+        this.Wrist.setPosition(0.5);
     }
 
-    public void openClaw() {
+    public void openClawR() {
         this.seatBeltR.setPosition(0.6);
-        this.seatBeltL.setPosition(0.3);
+//        this.seatBeltL.setPosition(0.35);
+    }
+
+    public void openClawL() {
+//        this.seatBeltR.setPosition(0.6);
+        this.seatBeltL.setPosition(0.35);
     }
 
     public void closeClaw() {
-        this.seatBeltL.setPosition(0.6);
-        this.seatBeltR.setPosition(0.3);
+        this.seatBeltL.setPosition(0.45);
+        this.seatBeltR.setPosition(0.45);
     }
 
     public void followTrajectoryAsync(Trajectory trajectory) {

@@ -20,8 +20,8 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import java.util.List;
 
 @Config
-@Autonomous(name = "gangAutoBFar", group = "Autonomous")
-public class gangAuto extends LinearOpMode {
+@Autonomous(name = "gangAutoRClose", group = "Autonomous")
+public class auto3 extends LinearOpMode {
 
     HardwarePushbot robot = new HardwarePushbot();
 
@@ -50,7 +50,6 @@ public class gangAuto extends LinearOpMode {
 
 
 
-
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -74,60 +73,22 @@ public class gangAuto extends LinearOpMode {
 //                    sleep(1000);
 //                    drive.liftArmEnd();
 //                })
-                .forward(24.25)
+                .back(23.5)
                 .addDisplacementMarker(() -> {
                     drive.setMotorPowers(0, 0, 0, 0);
                     drive.openClawR();
                     sleep(400);
                 })
-                .forward(55)
+                .forward(40)
                 .turn(Math.toRadians(81))
-                .forward(52.5)
-                .strafeLeft(30.5)
+                .forward(10)
                 .addDisplacementMarker(() -> {
                     drive.setMotorPowers(0, 0, 0, 0);
                     drive.liftArm();
                     sleep(800);
                     drive.liftArmEnd();
                     drive.setMotorPowers(0.25, 0.25, 0.25, 0.25);
-                    sleep(3250);
-                    drive.setMotorPowers(0, 0, 0, 0);
-                    drive.openClawL();
-                    sleep(300);
-                    drive.closeClaw();
-                    drive.lowerArm();
-                    sleep(100);
-                    drive.lowerArmFinal();
-                })
-                .build();
-
-        // rigyht
-        TrajectorySequence trajSeqZero = drive.trajectorySequenceBuilder(startPose)
-                .addDisplacementMarker(() -> {
-                    drive.closeClaw();
-                })
-                .forward(32.5)
-                .turn(Math.toRadians(83))
-                .addDisplacementMarker(() -> {
-                    drive.setMotorPowers(0, 0, 0, 0);
-                    drive.openClawR();
-                    sleep(400);
-                    drive.raiseWrist();
-                    sleep(400);
-//                    drive.setMotorPowers(0.20, 0.20, 0.20, 0.20);
-//                    sleep(125);
-//                    drive.setMotorPowers(0, 0, 0, 0);
-                })
-                .strafeRight(55)
-                .forward(52.5)
-                .strafeLeft(30.5)
-                .addDisplacementMarker(() -> {
-                    drive.setMotorPowers(0, 0, 0, 0);
-                    drive.liftArm();
-                    sleep(800);
-                    drive.liftArmEnd();
-                    drive.setMotorPowers(0.25, 0.25, 0.25, 0.25);
-                    sleep(3250);
+                    sleep(2550);
                     drive.setMotorPowers(0, 0, 0, 0);
                     drive.openClawL();
                     sleep(300);
@@ -139,41 +100,19 @@ public class gangAuto extends LinearOpMode {
                 .build();
 
         // left
+        TrajectorySequence trajSeqZero = drive.trajectorySequenceBuilder(startPose)
+                .forward(45)
+                .turn(Math.toRadians(-90))
+                .build();
+
+        // right
         TrajectorySequence trajSeqTwo = drive.trajectorySequenceBuilder(startPose)
+//                .forward(45)
+                .turn(Math.toRadians(5))
                 .addDisplacementMarker(() -> {
-                    drive.closeClaw();
-                })
-                .forward(32.5)
-                .turn(Math.toRadians(-83))
-                .addDisplacementMarker(() -> {
-                    drive.setMotorPowers(0, 0, 0, 0);
                     drive.openClawR();
-                    sleep(400);
-                    drive.raiseWrist();
-                    sleep(400);
-                    drive.setMotorPowers(0.25, 0.25, 0.25, 0.25);
-                    sleep(175);
-                    drive.setMotorPowers(0, 0, 0, 0);
-                })
-                .turn(Math.toRadians(-20))
-                .strafeLeft(70)
-                .back(52.5)
-                .strafeRight(33.5)
-                .turn(Math.toRadians(150))
-                .addDisplacementMarker(() -> {
-                    drive.setMotorPowers(0, 0, 0, 0);
-                    drive.liftArm();
-                    sleep(800);
-                    drive.liftArmEnd();
-                    drive.setMotorPowers(0.25, 0.25, 0.25, 0.25);
-                    sleep(3500);
-                    drive.setMotorPowers(0, 0, 0, 0);
-                    drive.openClawL();
-                    sleep(300);
+                    sleep(1000);
                     drive.closeClaw();
-                    drive.lowerArm();
-                    sleep(100);
-                    drive.lowerArmFinal();
                 })
                 .build();
 
@@ -190,33 +129,33 @@ public class gangAuto extends LinearOpMode {
                 // idk if it reinitializes in the loop so this
                 // is a precaution
 
-                    // object in middle
-                    if(telemetryTfod() == 1) {
-                        drive.followTrajectorySequence(trajSeq);
-                        sleep(35000);
-                    }
-                    // object in right
-                    else if (telemetryTfod() == 2) {
-                        drive.followTrajectorySequence(trajSeqZero);
-                        sleep(35000);
-
-                    } else if ((runtime.seconds() > 5) && telemetryTfod()==3) {
-                        drive.followTrajectorySequence(trajSeqTwo);
-                        sleep(35000);
-                    }
+                // object in middle
+                if(telemetryTfod() == 1) {
+                    drive.followTrajectorySequence(trajSeq);
+                    sleep(35000);
                 }
-                // Push telemetry to the Driver Station.
-                telemetry.update();
+                // object in left
+                else if (telemetryTfod() == 0) {
+                    drive.followTrajectorySequence(trajSeq);
+                    sleep(35000);
+
+                } else if ((runtime.seconds() > 5) && telemetryTfod()==3) {
+                    drive.followTrajectorySequence(trajSeq);
+                    sleep(35000);
+                }
+            }
+            // Push telemetry to the Driver Station.
+            telemetry.update();
 
 
-                // Save CPU resources; can resume streaming when needed.
+            // Save CPU resources; can resume streaming when needed.
 //                if (gamepad1.dpad_down) {
 //                    visionPortal.stopStreaming();
 //                } else if (gamepad1.dpad_up) {
 //                    visionPortal.resumeStreaming();
-            }
+        }
 
-            // Share the CPU.
+        // Share the CPU.
 //                sleep(20);
 
 
@@ -369,10 +308,7 @@ public class gangAuto extends LinearOpMode {
 
         // Create the vision portal the easy way.
         visionPortal = VisionPortal.easyCreateWithDefaults(
-        hardwareMap.get(WebcamName.class, "Webcam 1"), tfod);
-
-        tfod.setMinResultConfidence((float) 0.15);
-
+                hardwareMap.get(WebcamName.class, "Webcam 1"), tfod);
 
     }   // end method initTfod()
 
@@ -396,15 +332,15 @@ public class gangAuto extends LinearOpMode {
             telemetry.addData("- Position", "%.0f / %.0f", x, y);
             telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
 
-            if (x < 500) {
-                telemetry.addData("Custom Object at Middle", "");
-                numPos = 1;
-            }else if (x > 500) {
-                telemetry.addData("Custom Object at Right", "");
-                numPos = 2;
-            } else  {
+            if (x < 250) {
                 telemetry.addData("Custom Object at Left", "");
                 numPos = 0;
+            }else if (x > 250) {
+                telemetry.addData("Custom Object at Middle", "");
+                numPos = 1;
+            } else  {
+                telemetry.addData("Custom Object at Left", "");
+                numPos = 2;
             }
 
             telemetry.update();
