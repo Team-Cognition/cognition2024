@@ -278,11 +278,11 @@ public class gangAuto extends LinearOpMode {
 
     public void openClaw() {
         robot.seatBeltR.setPosition(0.6);
-        robot.seatBeltL.setPosition(0.3);
+        robot.seatBeltL.setPosition(0.6);
     }
 
     public void closeClaw() {
-        robot.seatBeltL.setPosition(0.6);
+        robot.seatBeltL.setPosition(0.3);
         robot.seatBeltR.setPosition(0.3);
     }
 
